@@ -4,303 +4,1047 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chore Chart</title>
+  <!-- Google Fonts and Material Icons -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+    :root {
+      --md-primary: #1976d2;
+      --md-accent: #ffeb3b;
+      --md-error: #d32f2f;
+      --md-surface: #fff;
+      --md-background: #f4f4f4;
+      --md-divider: #e0e0e0;
+      --md-on-primary: #fff;
+      --md-on-surface: #222;
+      --md-radius: 12px;
+      --md-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      --md-shadow-strong: 0 6px 20px rgba(0,0,0,0.18);
+      --md-elevation: 0 1.5px 8px rgba(25, 118, 210, 0.07);
+      --md-btn-height: 40px;
+      --md-btn-radius: 8px;
+      /* Day Colors */
+      --day-monday: #e3f2fd;
+      --day-tuesday: #f1f8e9;
+      --day-wednesday: #fff3e0;
+      --day-thursday: #fce4ec;
+      --day-friday: #ede7f6;
+      --day-saturday: #f9fbe7;
+      --day-sunday: #ffebee;
+      --day-monday-dark: #1976d2;
+      --day-tuesday-dark: #388e3c;
+      --day-wednesday-dark: #f57c00;
+      --day-thursday-dark: #c2185b;
+      --day-friday-dark: #512da8;
+      --day-saturday-dark: #827717;
+      --day-sunday-dark: #c62828;
+    }
+    html, body {
+      background: var(--md-background);
+      font-family: 'Roboto', Arial, sans-serif;
+      color: var(--md-on-surface);
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
     }
-
     h1 {
       text-align: center;
-      padding: 20px;
+      padding: 5px 0 5px 0;
       margin: 0;
-      background-color: #1976d2;
-      color: white;
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+      letter-spacing: 0.04em;
+      font-weight: 500;
+      font-size: 2.3em;
+      box-shadow: var(--md-shadow);
     }
-
-    #chore-table-container {
-      padding: 20px;
+    #open-options-btn {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      z-index: 1999;
+      background: B0BEC5;
+      color: #222;
+      border: none;
+      border-radius: var(--md-btn-radius);
+      font-weight: 500;
+      padding: 0 22px 0 18px;
+      cursor: pointer;
+      height: var(--md-btn-height);
+      font-size: 1.12em;
+      min-width: 110px;
+      box-shadow: var(--md-shadow);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: box-shadow 0.2s;
+    }
+    #open-options-btn:active, #open-options-btn:focus {
+      box-shadow: var(--md-shadow-strong);
+      outline: none;
+    }
+    .table-section {
+      background: var(--md-surface);
+      border-radius: var(--md-radius);
+      box-shadow: var(--md-elevation);
+      padding: 24px 18px 18px 18px;
       max-width: 1000px;
-      margin: auto;
+      margin: 36px auto;
+      position: relative;
+      margin-bottom: 40px;
+      transition: box-shadow 0.2s;
     }
-
+    .table-section:hover {
+      box-shadow: var(--md-shadow-strong);
+    }
+    .table-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .table-header h2 {
+      margin: 0;
+      font-size: 1.3em;
+      font-weight: 500;
+      color: var(--md-primary);
+      letter-spacing: 0.02em;
+    }
+    .chore-table-container {
+      margin-top: 10px;
+    }
     table {
       width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 8px;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--md-surface);
+      border-radius: var(--md-radius);
       overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0.5px 4px rgba(0,0,0,0.05);
     }
-
     th, td {
-      padding: 15px;
+      padding: 14px 8px;
       text-align: center;
-      border: 1px solid #ccc;
+      border-bottom: 1px solid var(--md-divider);
+      font-size: 1.05em;
     }
-
     th {
-      background-color: #2196f3;
-      color: white;
+      background-color: var(--md-primary);
+      color: var(--md-on-primary);
+      font-weight: 500;
+      letter-spacing: 0.02em;
     }
-
+    /* Day color headers/cells */
+    th.day-monday    { background: var(--day-monday-dark)!important; color: #fff!important;}
+    th.day-tuesday   { background: var(--day-tuesday-dark)!important; color: #fff!important;}
+    th.day-wednesday { background: var(--day-wednesday-dark)!important; color: #fff!important;}
+    th.day-thursday  { background: var(--day-thursday-dark)!important; color: #fff!important;}
+    th.day-friday    { background: var(--day-friday-dark)!important; color: #fff!important;}
+    th.day-saturday  { background: var(--day-saturday-dark)!important; color: #fff!important;}
+    th.day-sunday    { background: var(--day-sunday-dark)!important; color: #fff!important;}
+    td.day-monday    { background: var(--day-monday);}
+    td.day-tuesday   { background: var(--day-tuesday);}
+    td.day-wednesday { background: var(--day-wednesday);}
+    td.day-thursday  { background: var(--day-thursday);}
+    td.day-friday    { background: var(--day-friday);}
+    td.day-saturday  { background: var(--day-saturday);}
+    td.day-sunday    { background: var(--day-sunday);}
+    /* Chore header and first column always neutral */
+    th.chore-header {
+      background: #fff !important;
+      color: #333 !important;
+      font-weight: 500;
+    }
+    td.chore-cell {
+      background: #fff !important;
+      color: #333 !important;
+      font-weight: 400;
+      text-align: left;
+    }
+    th:first-child   { border-top-left-radius: var(--md-radius);}
+    th:last-child    { border-top-right-radius: var(--md-radius);}
+    tr:last-child td:first-child { border-bottom-left-radius: var(--md-radius);}
+    tr:last-child td:last-child  { border-bottom-right-radius: var(--md-radius);}
+    /* Material Switch */
     .switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
+      display: inline-flex;
+      align-items: center;
       height: 28px;
+      position: relative;
     }
-
-    .switch input {
+    .switch input[type="checkbox"] {
       opacity: 0;
       width: 0;
       height: 0;
-    }
-
-    .slider {
       position: absolute;
-      cursor: pointer;
-      top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: red;
-      transition: 0.3s;
+      top: 0;
+    }
+    .slider {
+      width: 48px;
+      height: 28px;
+      background: #d1d1d1;
       border-radius: 28px;
+      transition: background 0.25s;
+      position: relative;
+      display: inline-block;
+      box-sizing: border-box;
     }
-
     .slider:before {
+      content: '';
       position: absolute;
-      content: "";
-      height: 22px;
-      width: 22px;
       left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.3s;
+      top: 3px;
+      width: 22px;
+      height: 22px;
+      background: var(--md-surface);
       border-radius: 50%;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+      transition: 0.28s cubic-bezier(.4,0,.2,1);
     }
-
-    input:checked + .slider {
-      background-color: #4caf50;
+    .switch input:checked + .slider {
+      background: #4caf50;
     }
-
-    input:checked + .slider:before {
-      transform: translateX(22px);
+    .switch input:checked + .slider:before {
+      transform: translateX(20px);
     }
-
-    #open-drawer-btn {
+    /* Drawer (side modal) */
+    #options-drawer-bg {
       position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 10px 15px;
-      background-color: #ffff00;
-      color: black;
+      top: 0; right: 0; left: 0; bottom: 0;
+      background: rgba(0,0,0,0.24);
+      display: none;
+      z-index: 2000;
+    }
+    #options-drawer-bg.open {
+      display: block;
+    }
+    #options-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 380px;
+      max-width: 94vw;
+      height: 100%;
+      background-color: #fafafa;
+      box-shadow: -2px 0 16px rgba(25, 118, 210, 0.13);
+      transition: right 0.33s cubic-bezier(.56,.19,.41,.98);
+      padding: 32px 28px 20px 28px;
+      z-index: 2100;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      border-top-left-radius: 28px;
+      border-bottom-left-radius: 28px;
+    }
+    #options-drawer.open {
+      right: 0;
+    }
+    #options-drawer h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.24em;
+      color: var(--md-primary);
+      letter-spacing: 0.01em;
+      font-weight: 500;
+    }
+    #options-drawer .close-x {
+      position: absolute;
+      top: 14px; right: 19px;
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 2em;
+      cursor: pointer;
+      z-index: 2102;
+      transition: color 0.15s;
+    }
+    #options-drawer .close-x:hover {
+      color: var(--md-primary);
+    }
+    .drawer-table-block {
+      border: 1px solid var(--md-divider);
+      border-radius: var(--md-radius);
+      margin: 18px 0 27px 0;
+      background: #fff;
+      padding: 14px 15px 10px 15px;
+      box-shadow: 0 0.5px 3px rgba(0,0,0,0.05);
+      transition: box-shadow 0.13s;
+    }
+    .drawer-table-block h3 {
+      margin: 0 0 7px 0;
+      font-size: 1.11em;
+      color: var(--md-primary);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .drawer-list {
+      margin: 6px 0 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .drawer-list li {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 5px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #eee;
+      font-size: 1em;
+      transition: background 0.15s;
+    }
+    .drawer-list li:last-child {
+      border-bottom: none;
+    }
+    .drawer-list .chore-label {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #444;
+    }
+    .drawer-list button, .drawer-table-block button {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      z-index: 1000;
-    }
-
-    #drawer {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 300px;
-      height: 100%;
-      background-color: white;
-      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-      transition: right 0.3s ease;
-      padding: 20px;
-      z-index: 999;
-    }
-
-    #drawer.open {
-      right: 0;
-    }
-
-    #drawer h2 {
-      margin-top: 0;
-    }
-
-    .day-checkboxes label {
-      display: block;
-    }
-
-    #drawer form {
-      margin-bottom: 20px;
-    }
-
-    #drawer input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-    }
-
-    .chore-list {
-      max-height: 300px;
-      overflow-y: auto;
-      margin-top: 10px;
-    }
-
-    .chore-item {
+      padding: 3px 12px;
+      font-size: 0.97em;
+      margin-left: 2px;
+      box-shadow: 0 1px 2px rgba(25,118,210,0.08);
+      transition: background 0.13s, color 0.13s;
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
-      padding: 5px 0;
-      border-bottom: 1px solid #ddd;
+      align-items: center;
+      gap: 2px;
     }
-
-    .chore-item button {
-      background-color: #d32f2f;
-      color: white;
+    .drawer-list .delete-btn, .drawer-table-block .delete-table-btn {
+      background: var(--md-error);
+    }
+    .drawer-list .edit-btn {
+      background: var(--md-primary);
+    }
+    .drawer-list .move-btn {
+      background: #e0e0e0;
+      color: #444;
+      font-size: 1.1em;
+      padding: 3px 6px;
+      min-width: 28px;
+      min-height: 28px;
+    }
+    .drawer-list .move-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .drawer-table-block .move-table-btn {
+      background: #e0e0e0;
+      color: #444;
+      font-size: 1.2em;
+      padding: 4px 9px;
+      min-width: 30px;
+      min-height: 32px;
+      margin-left: 0;
+      margin-right: 6px;
+      border-radius: 5px;
+      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .drawer-table-block .move-table-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .drawer-table-block .delete-table-btn {
+      margin-top: 11px;
+      width: 100%;
+      padding: 10px 5px;
+      font-weight: 500;
+    }
+    .drawer-list .edit-btn, .drawer-list .delete-btn {
+      margin-right: 2px;
+    }
+    .drawer-section-title {
+      color: #666;
+      font-size: 1.06em;
+      margin: 20px 0 6px 0;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .drawer-table-block .no-chores {
+      color: #aaa;
+      font-size: 0.98em;
+      margin: 6px 0 0 0;
+    }
+    #drawer-add-table-form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      margin-top: 18px;
+      margin-bottom: 5px;
+    }
+    #drawer-add-table-form input[type="text"] {
+      padding: 8px 10px;
+      border: 1px solid var(--md-divider);
+      border-radius: var(--md-btn-radius);
+      font-size: 1em;
+      outline: none;
+      transition: border 0.14s;
+      background: #fafafa;
+      color: #111;
+    }
+    #drawer-add-table-form input[type="text"]:focus {
+      border: 1.5px solid var(--md-primary);
+    }
+    #drawer-add-table-form button {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+      padding: 0 10px;
+      height: 40px;
       border: none;
-      padding: 5px 8px;
-      border-radius: 3px;
+      border-radius: var(--md-btn-radius);
+      font-size: 1em;
+      font-weight: 500;
       cursor: pointer;
+      box-shadow: 0 1px 2px rgba(25,118,210,0.08);
+      transition: background 0.15s;
+    }
+    #drawer-add-table-form button:active,
+    #drawer-add-table-form button:focus {
+      background: #115293;
+    }
+    #drawer-clear-all-btn {
+      background: var(--md-error);
+      color: var(--md-on-primary);
+      border: none;
+      border-radius: var(--md-btn-radius);
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      margin: 0 0 13px 0;
+      margin-top: 12px;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(211,47,47,0.09);
+      transition: background 0.15s;
+      letter-spacing: 0.01em;
+    }
+    #drawer-clear-all-btn:active, #drawer-clear-all-btn:focus {
+      background: #a31515;
+    }
+    .drawer-add-chore-form {
+      margin:15px 0 8px 0;
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+    }
+    .drawer-add-chore-form input[type="text"] {
+      flex:2;
+      min-width:0;
+      padding:7px 7px;
+      border:1px solid #e0e0e0;
+      border-radius:6px;
+      font-size:1em;
+      background:#fafafa;
+    }
+    .drawer-add-chore-form button[type="submit"] {
+      min-width:40px;
+      background:#1976d2;
+      color:#fff;
+      font-weight:500;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      padding:0 12px;
+      border-radius:6px;
+      font-size:1em;
+    }
+    .drawer-add-chore-form label {
+      font-size:0.98em;
+    }
+    #edit-modal-bg {
+      position: fixed;
+      z-index: 3000;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #edit-modal-bg.show {
+      display: flex;
+    }
+    #edit-modal {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--md-shadow-strong);
+      padding: 32px 28px 26px 28px;
+      min-width: 300px;
+      max-width: 94vw;
+      min-height: 40px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #edit-modal h4 {
+      margin: 0 0 12px 0;
+      font-weight: 500;
+      color: var(--md-primary);
+      letter-spacing: 0.01em;
+    }
+    #edit-modal label {
+      font-size: 1em;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 4px 0;
+    }
+    #edit-modal .modal-btn-row {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+    #edit-modal .modal-btn-row button {
+      padding: 7px 18px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    #edit-modal .save-btn {
+      background: var(--md-primary); color: #fff;
+    }
+    #edit-modal .cancel-btn {
+      background: #aaa; color: #fff;
+    }
+    #edit-modal .close-x {
+      position: absolute;
+      right: 12px;
+      top: 8px;
+      font-size: 1.5em;
+      color: #888;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    #edit-modal .close-x:hover {
+      color: var(--md-primary);
+    }
+    #edit-modal input[type="text"] {
+      padding: 10px;
+      font-size: 1em;
+      width: 100%;
+      margin-bottom: 6px;
+      border: 1px solid var(--md-divider);
+      border-radius: 6px;
+      transition: border 0.14s;
+      background: #fafafa;
+      color: #111;
+    }
+    #edit-modal input[type="text"]:focus {
+      border: 1.5px solid var(--md-primary);
+    }
+    @media (max-width: 700px) {
+      .table-section {
+        max-width: 98vw;
+        padding: 3vw 1vw;
+      }
+      table th, table td {
+        padding: 8px 3px;
+        font-size: 0.95em;
+      }
+      #options-drawer {
+        width: 97vw;
+        min-width: 0;
+        padding: 18px 4vw 14px 4vw;
+        border-radius: 0;
+      }
     }
   </style>
 </head>
 <body>
-
   <h1>Chore Chart</h1>
-  <button id="open-drawer-btn">Edit Chores ✏️</button>
-
-  <div id="drawer">
-    <h2>Edit Chores</h2>
-    <form id="add-chore-form">
-      <input type="text" id="chore-name" placeholder="Chore name" required />
-      <div class="day-checkboxes">
-        <label><input type="checkbox" name="day" value="Monday"> Monday</label>
-        <label><input type="checkbox" name="day" value="Tuesday"> Tuesday</label>
-        <label><input type="checkbox" name="day" value="Wednesday"> Wednesday</label>
-        <label><input type="checkbox" name="day" value="Thursday"> Thursday</label>
-        <label><input type="checkbox" name="day" value="Friday"> Friday</label>
-        <label><input type="checkbox" name="day" value="Saturday"> Saturday</label>
-        <label><input type="checkbox" name="day" value="Sunday"> Sunday</label>
-      </div>
-      <button type="submit">Add Chore</button>
-    </form>
-
-    <div class="chore-list" id="chore-list"></div>
+  <button id="open-options-btn"><span class="material-icons">settings</span>Options</button>
+  <div id="tables-container"></div>
+  <!-- Side Modal Drawer for all options -->
+  <div id="options-drawer-bg">
+    <div id="options-drawer">
+      <button class="close-x material-icons" title="Close">close</button>
+      <h2>All Table & Chore Options</h2>
+      <button id="drawer-clear-all-btn">
+        <span class="material-icons" style="vertical-align: middle;margin-right:7px;">clear_all</span>
+        Mark All Chores as Incomplete
+      </button>
+      <form id="drawer-add-table-form">
+        <input type="text" id="drawer-new-table-name" placeholder="New table name" required />
+        <button type="submit"><span class="material-icons" style="vertical-align: middle;margin-right:6px;">add</span>Add Table</button>
+      </form>
+      <div id="drawer-content"></div>
+    </div>
   </div>
-
-  <div id="chore-table-container">
-    <table id="chore-table">
-      <thead>
-        <tr>
-          <th>Chore</th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-          <th>Saturday</th>
-          <th>Sunday</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <!-- Modal for editing chores -->
+  <div id="edit-modal-bg">
+    <div id="edit-modal">
+      <button class="close-x material-icons" title="Close">close</button>
+      <h4>Edit Chore</h4>
+      <form id="edit-chore-form">
+        <input type="text" id="edit-chore-name" required />
+        <div id="edit-day-checkboxes"></div>
+        <div class="modal-btn-row">
+          <button type="button" class="cancel-btn">Cancel</button>
+          <button type="submit" class="save-btn">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
-
+  <!-- Modal for renaming tables -->
+  <div id="rename-modal-bg" style="position:fixed;left:0;top:0;right:0;bottom:0;display:none;align-items:center;justify-content:center;z-index:4000;background:rgba(0,0,0,0.45);">
+    <div id="rename-modal" style="background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.16);padding:32px 28px 26px 28px;min-width:300px;max-width:94vw;position:relative;display:flex;flex-direction:column;gap:12px;">
+      <button class="close-x material-icons" style="position:absolute;right:12px;top:8px;font-size:1.5em;color:#888;cursor:pointer;border:none;background:transparent;padding:0;line-height:1;" title="Close">close</button>
+      <h4 style="margin:0 0 12px 0;font-weight:500;color:#1976d2;letter-spacing:0.01em;">Rename Table</h4>
+      <form id="rename-table-form">
+        <input type="text" id="rename-table-name" required style="padding:10px;font-size:1em;width:100%;margin-bottom:6px;border:1px solid #e0e0e0;border-radius:6px;transition:border 0.14s;background:#fafafa;color:#111;">
+        <div class="modal-btn-row" style="display:flex;gap:12px;justify-content:flex-end;margin-top:18px;">
+          <button type="button" class="cancel-btn" style="background:#aaa;color:#fff;padding:7px 18px;border:none;border-radius:5px;font-size:1em;cursor:pointer;font-weight:500;letter-spacing:0.01em;">Cancel</button>
+          <button type="submit" class="save-btn" style="background:#1976d2;color:#fff;padding:7px 18px;border:none;border-radius:5px;font-size:1em;cursor:pointer;font-weight:500;letter-spacing:0.01em;">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script>
-    const openDrawerBtn = document.getElementById('open-drawer-btn');
-    const drawer = document.getElementById('drawer');
-    const form = document.getElementById('add-chore-form');
-    const choreListDiv = document.getElementById('chore-list');
-    const tableBody = document.querySelector('#chore-table tbody');
-
-    let chores = JSON.parse(localStorage.getItem('chores') || '[]');
-    let toggleStates = JSON.parse(localStorage.getItem('toggleStates') || '{}');
-
+    // --- Data helpers ---
+    function getTables() {
+      return JSON.parse(localStorage.getItem('tables') || '[]');
+    }
+    function saveTables(tables) {
+      localStorage.setItem('tables', JSON.stringify(tables));
+    }
+    function getTableData(tableName) {
+      return JSON.parse(localStorage.getItem('table_' + tableName) || '{"chores":[],"toggleStates":{}}');
+    }
+    function saveTableData(tableName, data) {
+      localStorage.setItem('table_' + tableName, JSON.stringify(data));
+    }
+    function deleteTableData(tableName) {
+      localStorage.removeItem('table_' + tableName);
+    }
+    function renameTable(oldName, newName) {
+      const data = getTableData(oldName);
+      localStorage.setItem('table_' + newName, JSON.stringify(data));
+      deleteTableData(oldName);
+      let tables = getTables();
+      tables = tables.map(t => t === oldName ? newName : t);
+      saveTables(tables);
+    }
+    const tablesContainer = document.getElementById('tables-container');
+    const openOptionsBtn = document.getElementById('open-options-btn');
+    const optionsDrawerBg = document.getElementById('options-drawer-bg');
+    const optionsDrawer = document.getElementById('options-drawer');
+    const drawerContent = document.getElementById('drawer-content');
+    const drawerClearAllBtn = document.getElementById('drawer-clear-all-btn');
+    const drawerAddTableForm = document.getElementById('drawer-add-table-form');
+    const drawerNewTableNameInput = document.getElementById('drawer-new-table-name');
+    const renameModalBg = document.getElementById('rename-modal-bg');
+    const renameModal = document.getElementById('rename-modal');
+    const renameTableForm = document.getElementById('rename-table-form');
+    const renameTableNameInput = document.getElementById('rename-table-name');
+    let tableToRename = null;
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const editModalBg = document.getElementById('edit-modal-bg');
+    const editModal = document.getElementById('edit-modal');
+    const editChoreForm = document.getElementById('edit-chore-form');
+    const editChoreNameInput = document.getElementById('edit-chore-name');
+    const editDayCheckboxes = document.getElementById('edit-day-checkboxes');
+    let modalTableName = null;
+    let modalChoreIdx = null;
+    let modalOriginalChoreName = null;
 
-    function renderChoreTable() {
-      tableBody.innerHTML = '';
-      chores.forEach((chore, index) => {
-        const row = document.createElement('tr');
-        const labelCell = document.createElement('td');
-        labelCell.textContent = chore.name;
-        row.appendChild(labelCell);
-
-        days.forEach(day => {
-          const cell = document.createElement('td');
-          if (chore.days.includes(day)) {
-            const switchId = `${day}-${chore.name}`;
-            const label = document.createElement('label');
-            label.className = 'switch';
-            const input = document.createElement('input');
-            input.type = 'checkbox';
-            input.id = switchId;
-            input.checked = !!toggleStates[switchId];
-            input.addEventListener('change', () => {
-              toggleStates[switchId] = input.checked;
-              localStorage.setItem('toggleStates', JSON.stringify(toggleStates));
-            });
-            const slider = document.createElement('span');
-            slider.className = 'slider';
-            label.appendChild(input);
-            label.appendChild(slider);
-            cell.appendChild(label);
-          } else {
-            cell.textContent = '—';
-            cell.style.color = '#bbb';
-          }
-          row.appendChild(cell);
-        });
-
-        tableBody.appendChild(row);
-      });
+    function openEditModal(tableName, idx, chore) {
+      modalTableName = tableName;
+      modalChoreIdx = idx;
+      modalOriginalChoreName = chore.name;
+      editChoreNameInput.value = chore.name;
+      editDayCheckboxes.innerHTML = days.map(day =>
+        `<label><input type="checkbox" name="day" value="${day}" ${chore.days.includes(day) ? 'checked' : ''}/> ${day}</label>`
+      ).join('');
+      editModalBg.classList.add('show');
+      editChoreNameInput.focus();
     }
-
-    function renderChoreList() {
-      choreListDiv.innerHTML = '';
-      chores.forEach((chore, index) => {
-        const div = document.createElement('div');
-        div.className = 'chore-item';
-        div.innerHTML = `
-          <span>${chore.name}</span>
-          <button onclick="deleteChore(${index})">Delete</button>
-        `;
-        choreListDiv.appendChild(div);
-      });
+    function closeEditModal() {
+      editModalBg.classList.remove('show');
+      modalTableName = null;
+      modalChoreIdx = null;
+      modalOriginalChoreName = null;
+      editChoreForm.reset();
     }
-
-    function deleteChore(index) {
-      const chore = chores[index];
-      chores.splice(index, 1);
-      days.forEach(day => {
-        const key = `${day}-${chore.name}`;
-        delete toggleStates[key];
-      });
-      localStorage.setItem('chores', JSON.stringify(chores));
-      localStorage.setItem('toggleStates', JSON.stringify(toggleStates));
-      renderChoreTable();
-      renderChoreList();
-    }
-
-    form.addEventListener('submit', e => {
+    editModal.querySelector('.close-x').onclick =
+    editModal.querySelector('.cancel-btn').onclick = function(e) {
       e.preventDefault();
-      const name = document.getElementById('chore-name').value.trim();
-      const daysSelected = Array.from(form.querySelectorAll('input[name="day"]:checked')).map(i => i.value);
-      if (!name || daysSelected.length === 0) return;
-      chores.push({ name, days: daysSelected });
-      localStorage.setItem('chores', JSON.stringify(chores));
-      renderChoreTable();
-      renderChoreList();
-      form.reset();
+      closeEditModal();
+    };
+    window.addEventListener('keydown', function(e) {
+      if (editModalBg.classList.contains('show') && e.key === "Escape") {
+        closeEditModal();
+      }
+      if (renameModalBg.style.display === "flex" && e.key === "Escape") {
+        closeRenameModal();
+      }
+    });
+    editModalBg.addEventListener('mousedown', function(e){
+      if (e.target === editModalBg) closeEditModal();
     });
 
-    openDrawerBtn.addEventListener('click', () => {
-      drawer.classList.toggle('open');
+    // Rename modal logic
+    function openRenameModal(oldTableName) {
+      tableToRename = oldTableName;
+      renameTableNameInput.value = oldTableName;
+      renameModalBg.style.display = "flex";
+      renameTableNameInput.focus();
+    }
+    function closeRenameModal() {
+      renameModalBg.style.display = "none";
+      tableToRename = null;
+      renameTableForm.reset();
+    }
+    renameModal.querySelector('.close-x').onclick =
+    renameTableForm.querySelector('.cancel-btn').onclick = function(e) {
+      e.preventDefault();
+      closeRenameModal();
+    };
+
+    renameTableForm.onsubmit = function(e) {
+      e.preventDefault();
+      const newName = renameTableNameInput.value.trim();
+      if (!newName || !tableToRename || newName === tableToRename) { closeRenameModal(); return; }
+      let tables = getTables();
+      if (tables.includes(newName)) {
+        alert("A table with that name already exists.");
+        return;
+      }
+      renameTable(tableToRename, newName);
+      renderDrawerOptions();
+      renderAllTables();
+      closeRenameModal();
+    };
+
+    renameModalBg.addEventListener('mousedown', function(e){
+      if (e.target === renameModalBg) closeRenameModal();
     });
 
-    renderChoreTable();
-    renderChoreList();
+    openOptionsBtn.onclick = function() {
+      renderDrawerOptions();
+      optionsDrawerBg.classList.add('open');
+      setTimeout(() => optionsDrawer.classList.add('open'), 15);
+    };
+    optionsDrawer.querySelector('.close-x').onclick = function() {
+      optionsDrawer.classList.remove('open');
+      setTimeout(() => optionsDrawerBg.classList.remove('open'), 350);
+    };
+    optionsDrawerBg.addEventListener('mousedown', function(e){
+      if (e.target === optionsDrawerBg) {
+        optionsDrawer.classList.remove('open');
+        setTimeout(() => optionsDrawerBg.classList.remove('open'), 350);
+      }
+    });
+
+    drawerAddTableForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = drawerNewTableNameInput.value.trim();
+      if (!name) return;
+      let tables = getTables();
+      if (tables.includes(name)) return;
+      tables.push(name);
+      saveTables(tables);
+      saveTableData(name, { chores: [], toggleStates: {} });
+      drawerNewTableNameInput.value = '';
+      renderDrawerOptions();
+      renderAllTables();
+    });
+
+    drawerClearAllBtn.addEventListener('click', function() {
+      if (!confirm("Are you sure you want to mark ALL chores in ALL tables as incomplete?")) return;
+      const tables = getTables();
+      tables.forEach(tableName => {
+        let data = getTableData(tableName);
+        Object.keys(data.toggleStates).forEach(k => data.toggleStates[k] = false);
+        saveTableData(tableName, data);
+      });
+      renderDrawerOptions();
+      renderAllTables();
+    });
+
+    function moveArrayItem(arr, from, to) {
+      if (from === to) return arr;
+      const item = arr.splice(from, 1)[0];
+      arr.splice(to, 0, item);
+      return arr;
+    }
+
+    function renderDrawerOptions() {
+      let tables = getTables();
+      if (tables.length === 0) {
+        drawerContent.innerHTML = `<div style="color:#888;padding:9px;">No tables. Add one using the form above.</div>`;
+        return;
+      }
+      drawerContent.innerHTML = tables.map((tableName, tIdx) => {
+        const data = getTableData(tableName);
+        // Add chore form
+        const addChoreFormHtml = `
+          <form class="drawer-add-chore-form" data-table="${encodeURIComponent(tableName)}" style="margin:15px 0 8px 0;display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:6px;">
+              <input type="text" class="add-chore-name" placeholder="Chore name" required style="flex:2;min-width:0;padding:7px 7px;border:1px solid #e0e0e0;border-radius:6px;font-size:1em;background:#fafafa;">
+              <button type="submit" title="Add Chore" style="min-width:40px;background:#1976d2;color:#fff;font-weight:500;display:flex;align-items:center;justify-content:center;gap:3px;padding:0 12px;border-radius:6px;font-size:1em;"><span class="material-icons" style="font-size:1.2em;">add</span>Add</button>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-left:3px;">
+              ${days.map(day => `<label style="font-size:0.98em;"><input type="checkbox" name="day" value="${day}"> ${day.slice(0,3)}</label>`).join('')}
+            </div>
+          </form>
+        `;
+        return `
+          <div class="drawer-table-block" data-table="${encodeURIComponent(tableName)}">
+            <div style="display:flex;align-items:center;gap:2px;margin-bottom:3px;">
+              <button class="move-table-btn" data-dir="up" ${tIdx===0?'disabled':''} title="Move Up"><span class="material-icons">arrow_upward</span></button>
+              <button class="move-table-btn" data-dir="down" ${tIdx===tables.length-1?'disabled':''} title="Move Down"><span class="material-icons">arrow_downward</span></button>
+              <h3 style="margin:0 0 0 7px;flex:1;">${tableName}</h3>
+              <button class="rename-table-btn" title="Rename Table" style="background:#ffeb3b;color:#333;margin-left:6px;padding:3px 12px;border-radius:5px;box-shadow:0 1px 2px rgba(25,118,210,0.08);font-size:0.97em;font-weight:500;display:flex;align-items:center;gap:2px;">
+                <span class="material-icons" style="font-size:1.1em;">edit</span>Rename
+              </button>
+            </div>
+            ${addChoreFormHtml}
+            <div class="drawer-section-title">Chores</div>
+            <ul class="drawer-list">
+              ${
+                data.chores.length === 0
+                ? `<div class="no-chores">No chores in this table.</div>`
+                : data.chores.map((chore, idx) => `
+                  <li>
+                    <button class="move-btn" data-idx="${idx}" data-dir="up" ${idx===0?'disabled':''} title="Move Up"><span class="material-icons" style="font-size:1.1em;">arrow_upward</span></button>
+                    <button class="move-btn" data-idx="${idx}" data-dir="down" ${idx===data.chores.length-1?'disabled':''} title="Move Down"><span class="material-icons" style="font-size:1.1em;">arrow_downward</span></button>
+                    <span class="chore-label">${chore.name}</span>
+                    <button class="edit-btn" data-idx="${idx}"><span class="material-icons" style="font-size:1.1em;">edit</span>Edit</button>
+                    <button class="delete-btn" data-idx="${idx}"><span class="material-icons" style="font-size:1.1em;">delete</span>Delete</button>
+                  </li>
+                `).join('')
+              }
+            </ul>
+            <button class="delete-table-btn"><span class="material-icons" style="vertical-align:middle;font-size:1.15em;margin-right:5px;">delete_forever</span>Delete Table</button>
+          </div>
+        `;
+      }).join('');
+      // Attach event listeners for delete/rename/move table, add chore, edit/move/delete chore
+      document.querySelectorAll('.drawer-table-block').forEach((block, tIdx) => {
+        const tableName = decodeURIComponent(block.getAttribute('data-table'));
+        block.querySelector('.delete-table-btn').onclick = () => {
+          if (!confirm(`Delete table "${tableName}"? This cannot be undone.`)) return;
+          let tables = getTables();
+          tables = tables.filter(t => t !== tableName);
+          saveTables(tables);
+          deleteTableData(tableName);
+          renderDrawerOptions();
+          renderAllTables();
+        };
+        block.querySelector('.rename-table-btn').onclick = () => {
+          openRenameModal(tableName);
+        };
+        block.querySelectorAll('.move-table-btn').forEach(btn => {
+          btn.onclick = function() {
+            let tables = getTables();
+            const dir = btn.getAttribute('data-dir');
+            const idx = tIdx;
+            let targetIdx = dir === 'up' ? idx-1 : idx+1;
+            if (targetIdx < 0 || targetIdx >= tables.length) return;
+            moveArrayItem(tables, idx, targetIdx);
+            saveTables(tables);
+            renderDrawerOptions();
+            renderAllTables();
+          }
+        });
+        // Add chore
+        const addChoreForm = block.querySelector('.drawer-add-chore-form');
+        addChoreForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const nameInput = addChoreForm.querySelector('.add-chore-name');
+          const name = nameInput.value.trim();
+          const daysSelected = Array.from(addChoreForm.querySelectorAll('input[name="day"]:checked')).map(i => i.value);
+          if (!name || !daysSelected.length) return;
+          const data = getTableData(tableName);
+          if (data.chores.some(c => c.name === name)) {
+            alert("A chore with that name already exists in this table.");
+            return;
+          }
+          data.chores.push({ name, days: daysSelected });
+          saveTableData(tableName, data);
+          renderDrawerOptions();
+          renderAllTables();
+        });
+        // Edit chore
+        block.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.onclick = function() {
+            const idx = +btn.getAttribute('data-idx');
+            const data = getTableData(tableName);
+            openEditModal(tableName, idx, data.chores[idx]);
+          };
+        });
+        block.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.onclick = function() {
+            const idx = +btn.getAttribute('data-idx');
+            const data = getTableData(tableName);
+            const { chores, toggleStates } = data;
+            const chore = chores[idx];
+            chores.splice(idx, 1);
+            days.forEach(day => {
+              const key = `${day}-${chore.name}`;
+              delete toggleStates[key];
+            });
+            saveTableData(tableName, data);
+            renderDrawerOptions();
+            renderAllTables();
+          };
+        });
+        // Move chore up/down
+        block.querySelectorAll('.move-btn').forEach(btn => {
+          btn.onclick = function() {
+            const idx = +btn.getAttribute('data-idx');
+            const dir = btn.getAttribute('data-dir');
+            const data = getTableData(tableName);
+            let targetIdx = dir === 'up' ? idx-1 : idx+1;
+            if (targetIdx < 0 || targetIdx >= data.chores.length) return;
+            moveArrayItem(data.chores, idx, targetIdx);
+            saveTableData(tableName, data);
+            renderDrawerOptions();
+            renderAllTables();
+          }
+        });
+      });
+    }
+
+    editChoreForm.onsubmit = function(e) {
+      e.preventDefault();
+      if (modalTableName == null || modalChoreIdx == null) return;
+      const data = getTableData(modalTableName);
+      const chores = data.chores;
+      const chore = chores[modalChoreIdx];
+      const newName = editChoreNameInput.value.trim();
+      const newDays = Array.from(editDayCheckboxes.querySelectorAll('input[name="day"]:checked')).map(i => i.value);
+      if (!newName || !newDays.length) return;
+      if (newName !== modalOriginalChoreName) {
+        for (const day of days) {
+          const oldKey = `${day}-${modalOriginalChoreName}`;
+          const newKey = `${day}-${newName}`;
+          data.toggleStates[newKey] = data.toggleStates[oldKey] || false;
+          delete data.toggleStates[oldKey];
+        }
+      }
+      chores[modalChoreIdx] = { name: newName, days: newDays };
+      saveTableData(modalTableName, data);
+      renderDrawerOptions();
+      renderAllTables();
+      closeEditModal();
+    };
+
+    function renderAllTables() {
+      const tables = getTables();
+      tablesContainer.innerHTML = '';
+      if (tables.length === 0) {
+        tablesContainer.innerHTML = '<div style="text-align:center;margin-top:40px;color:#888">No tables yet. Use the + button in options.</div>';
+        return;
+      }
+      tables.forEach(tableName => {
+        const section = document.createElement('div');
+        section.className = 'table-section';
+        const header = document.createElement('div');
+        header.className = 'table-header';
+        header.innerHTML = `<h2>${tableName}</h2>`;
+        section.appendChild(header);
+        const tableDiv = document.createElement('div');
+        tableDiv.className = 'chore-table-container';
+        const table = document.createElement('table');
+        // Add .chore-header to the first th only!
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th class="chore-header">Chore</th>
+              <th class="day-monday">Monday</th>
+              <th class="day-tuesday">Tuesday</th>
+              <th class="day-wednesday">Wednesday</th>
+              <th class="day-thursday">Thursday</th>
+              <th class="day-friday">Friday</th>
+              <th class="day-saturday">Saturday</th>
+              <th class="day-sunday">Sunday</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        `;
+        tableDiv.appendChild(table);
+        section.appendChild(tableDiv);
+
+        function renderChoreTable() {
+          const data = getTableData(tableName);
+          const { chores, toggleStates } = data;
+          const tbody = table.querySelector('tbody');
+          tbody.innerHTML = '';
+          chores.forEach((chore, idx) => {
+            const row = document.createElement('tr');
+            // First cell: always "chore-cell" for neutral color
+            const labelCell = document.createElement('td');
+            labelCell.className = 'chore-cell';
+            labelCell.textContent = chore.name;
+            row.appendChild(labelCell);
+            // Day cells
+            [
+              'monday','tuesday','wednesday','thursday','friday','saturday','sunday'
+            ].forEach(day => {
+              const cell = document.createElement('td');
+              cell.className = 'day-' + day;
+              const dayFull = day.charAt(0).toUpperCase() + day.slice(1);
+              if (chore.days.includes(dayFull)) {
+                const switchId = `${dayFull}-${chore.name}`;
+                const label = document.createElement('label');
+                label.className = 'switch';
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.id = switchId;
+                input.checked = !!toggleStates[switchId];
+                input.addEventListener('change', () => {
+                  data.toggleStates[switchId] = input.checked;
+                  saveTableData(tableName, data);
+                });
+                const slider = document.createElement('span');
+                slider.className = 'slider';
+                label.appendChild(input);
+                label.appendChild(slider);
+                cell.appendChild(label);
+              } else {
+                cell.textContent = '—';
+                cell.style.color = '#bbb';
+              }
+              row.appendChild(cell);
+            });
+            tbody.appendChild(row);
+          });
+          if (chores.length === 0) {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 8;
+            cell.style.color = '#888';
+            cell.textContent = 'No chores in this table.';
+            row.appendChild(cell);
+            tbody.appendChild(row);
+          }
+        }
+        renderChoreTable();
+        tablesContainer.appendChild(section);
+      });
+    }
+    renderAllTables();
   </script>
-
 </body>
 </html>
